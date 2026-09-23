@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   Camera, Video, AlertCircle, CheckCircle, RefreshCw, Zap, Award, Activity, 
-  Play, Square, Info, Volume2, VolumeX, History, Flame, ShieldAlert, Sparkles, Layers
+  Play, Square, Info, Volume2, VolumeX, History, Flame, ShieldAlert, Sparkles, Layers, UserCheck
 } from 'lucide-react';
 
 // ==========================================
@@ -9,10 +9,12 @@ import {
 // ==========================================
 const EXERCISES_CONFIG = {
   Squats: {
+    id: 1,
     label: 'Squats',
     category: 'Lower Body',
     difficulty: 'Intermediate',
     caloriesPerRep: 0.32,
+    demoVideo: 'https://assets.mixkit.co/videos/preview/mixkit-man-doing-squats-in-a-gym-43336-large.mp4',
     description: 'Tracks Hip-Knee-Ankle vector angle. Count rep when knees flex <100° and extend >160°.',
     targetAngleJoints: ['hip', 'knee', 'ankle'],
     downThreshold: 100,
@@ -23,10 +25,12 @@ const EXERCISES_CONFIG = {
     postureWarning: '⚠️ Keep spine straight! Avoid excessive forward leaning.'
   },
   Pushups: {
+    id: 2,
     label: 'Push-ups',
     category: 'Chest & Core',
     difficulty: 'Intermediate',
     caloriesPerRep: 0.45,
+    demoVideo: 'https://assets.mixkit.co/videos/preview/mixkit-young-woman-doing-push-ups-in-a-gym-43337-large.mp4',
     description: 'Tracks Shoulder-Elbow-Wrist flexion. Count rep when elbows bend <90° and extend >150°.',
     targetAngleJoints: ['shoulder', 'elbow', 'wrist'],
     downThreshold: 90,
@@ -37,10 +41,12 @@ const EXERCISES_CONFIG = {
     postureWarning: '⚠️ Hips sagging or piking! Maintain straight plank line.'
   },
   BicepCurls: {
+    id: 3,
     label: 'Bicep Curls',
     category: 'Arms',
     difficulty: 'Beginner',
     caloriesPerRep: 0.20,
+    demoVideo: 'https://assets.mixkit.co/videos/preview/mixkit-man-holding-dumbbells-and-doing-bicep-curls-43340-large.mp4',
     description: 'Tracks Shoulder-Elbow-Wrist arm flexion. Count rep when elbow flexes <50° and extends >150°.',
     targetAngleJoints: ['shoulder', 'elbow', 'wrist'],
     downThreshold: 50,
@@ -51,10 +57,12 @@ const EXERCISES_CONFIG = {
     postureWarning: '⚠️ Keep upper arm stationary at torso. Avoid swinging!'
   },
   JumpingJacks: {
+    id: 4,
     label: 'Jumping Jacks',
     category: 'Cardio',
     difficulty: 'Beginner',
     caloriesPerRep: 0.15,
+    demoVideo: 'https://assets.mixkit.co/videos/preview/mixkit-man-doing-squats-in-a-gym-43336-large.mp4',
     description: 'Tracks Overhead Arm angle (Wrist-Shoulder-Hip). Rep counted when hands touch overhead >150°.',
     targetAngleJoints: ['wrist', 'shoulder', 'hip'],
     downThreshold: 65,
@@ -65,10 +73,12 @@ const EXERCISES_CONFIG = {
     postureWarning: '⚠️ Keep core engaged & jump legs wider.'
   },
   Lunges: {
+    id: 5,
     label: 'Forward Lunges',
     category: 'Legs',
     difficulty: 'Intermediate',
     caloriesPerRep: 0.38,
+    demoVideo: 'https://assets.mixkit.co/videos/preview/mixkit-athlete-doing-lunges-in-a-gym-43338-large.mp4',
     description: 'Tracks lead Hip-Knee-Ankle flexion. Count rep when front knee flexes <95° and extends >165°.',
     targetAngleJoints: ['hip', 'knee', 'ankle'],
     downThreshold: 95,
@@ -79,10 +89,12 @@ const EXERCISES_CONFIG = {
     postureWarning: '⚠️ Keep torso vertical. Avoid leaning forward!'
   },
   OverheadPress: {
+    id: 6,
     label: 'Shoulder Press',
     category: 'Shoulders',
     difficulty: 'Intermediate',
     caloriesPerRep: 0.35,
+    demoVideo: 'https://assets.mixkit.co/videos/preview/mixkit-man-holding-dumbbells-and-doing-bicep-curls-43340-large.mp4',
     description: 'Tracks Elbow-Shoulder-Hip lockout. Rep counted when arms lock out overhead >160°.',
     targetAngleJoints: ['elbow', 'shoulder', 'hip'],
     downThreshold: 85,
@@ -93,10 +105,12 @@ const EXERCISES_CONFIG = {
     postureWarning: '⚠️ Lower back arching! Brace core tight.'
   },
   LegRaises: {
+    id: 7,
     label: 'Lying Leg Raises',
     category: 'Abs',
     difficulty: 'Advanced',
     caloriesPerRep: 0.28,
+    demoVideo: 'https://assets.mixkit.co/videos/preview/mixkit-young-woman-doing-push-ups-in-a-gym-43337-large.mp4',
     description: 'Tracks lying Shoulder-Hip-Knee angle. Count rep when legs raise vertical >65° and lower <25°.',
     targetAngleJoints: ['shoulder', 'hip', 'knee'],
     downThreshold: 25,
@@ -107,10 +121,12 @@ const EXERCISES_CONFIG = {
     postureWarning: '⚠️ Keep lower back pressed firmly against ground.'
   },
   TricepDips: {
+    id: 8,
     label: 'Tricep Dips',
     category: 'Arms',
     difficulty: 'Intermediate',
     caloriesPerRep: 0.30,
+    demoVideo: 'https://assets.mixkit.co/videos/preview/mixkit-young-woman-doing-push-ups-in-a-gym-43337-large.mp4',
     description: 'Tracks Shoulder-Elbow-Wrist flexion. Count rep when elbow flexes <90° and extends >155°.',
     targetAngleJoints: ['shoulder', 'elbow', 'wrist'],
     downThreshold: 90,
@@ -121,10 +137,12 @@ const EXERCISES_CONFIG = {
     postureWarning: '⚠️ Keep shoulders down and back. Don\'t shrug!'
   },
   HighKnees: {
+    id: 9,
     label: 'High Knees',
     category: 'Cardio',
     difficulty: 'Beginner',
     caloriesPerRep: 0.12,
+    demoVideo: 'https://assets.mixkit.co/videos/preview/mixkit-man-doing-squats-in-a-gym-43336-large.mp4',
     description: 'Tracks Hip elevation (Shoulder-Hip-Knee). Count rep when knee drives up parallel to hip (<90°).',
     targetAngleJoints: ['shoulder', 'hip', 'knee'],
     downThreshold: 90,
@@ -135,10 +153,12 @@ const EXERCISES_CONFIG = {
     postureWarning: '⚠️ Avoid leaning backwards. Stay light on feet.'
   },
   Plank: {
+    id: 10,
     label: 'Plank Hold',
     category: 'Core',
     difficulty: 'Intermediate',
     caloriesPerRep: 0.05,
+    demoVideo: 'https://assets.mixkit.co/videos/preview/mixkit-young-woman-doing-push-ups-in-a-gym-43337-large.mp4',
     description: 'Tracks Spine alignment vector (Shoulder-Hip-Ankle ~180°). Monitors hold duration & form stability.',
     targetAngleJoints: ['shoulder', 'hip', 'ankle'],
     downThreshold: 165,
@@ -199,12 +219,12 @@ function playSoundCue(type = 'rep') {
 
 export default function ComputerVisionPose() {
   const [isCameraActive, setIsCameraActive] = useState(false);
-  const [isSimulating, setIsSimulating] = useState(false);
+  const [isHumanDemoActive, setIsHumanDemoActive] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState('Squats');
   const [repCount, setRepCount] = useState(0);
   const [currentAngle, setCurrentAngle] = useState(0);
   const [postureScore, setPostureScore] = useState(98);
-  const [feedback, setFeedback] = useState('Select an exercise & start WebCam or AI Simulation.');
+  const [feedback, setFeedback] = useState('Select an exercise & start WebCam or Real Human Demo.');
   const [feedbackType, setFeedbackType] = useState('good');
   const [detectorStatus, setDetectorStatus] = useState('Idle');
   const [soundEnabled, setSoundEnabled] = useState(true);
@@ -213,6 +233,7 @@ export default function ComputerVisionPose() {
   const [plankHoldSeconds, setPlankHoldSeconds] = useState(0);
 
   const videoRef = useRef(null);
+  const demoVideoRef = useRef(null);
   const canvasRef = useRef(null);
   const repStageRef = useRef('up');
   const detectorRef = useRef(null);
@@ -224,15 +245,98 @@ export default function ComputerVisionPose() {
     if (soundEnabled) playSoundCue(type);
   };
 
+  // Plank hold timer
   useEffect(() => {
     let timer;
-    if ((isCameraActive || isSimulating) && selectedExercise === 'Plank' && feedbackType === 'good') {
+    if ((isCameraActive || isHumanDemoActive) && selectedExercise === 'Plank' && feedbackType === 'good') {
       timer = setInterval(() => {
         setPlankHoldSeconds(prev => prev + 1);
       }, 1000);
     }
     return () => clearInterval(timer);
-  }, [isCameraActive, isSimulating, selectedExercise, feedbackType]);
+  }, [isCameraActive, isHumanDemoActive, selectedExercise, feedbackType]);
+
+  // REAL HUMAN DEMO VIDEO TRACKING ENGINE (MediaPipe AI processes real human video frames!)
+  useEffect(() => {
+    if (!isHumanDemoActive) return;
+
+    let animId;
+    let poseEngine;
+    let isCancelled = false;
+
+    const startHumanDemoProcessing = async () => {
+      setDetectorStatus('Loading MediaPipe AI for Real Human Video...');
+
+      if (!window.Pose) {
+        await new Promise((resolve, reject) => {
+          const script = document.createElement('script');
+          script.src = 'https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js';
+          script.onload = resolve;
+          script.onerror = reject;
+          document.head.appendChild(script);
+        });
+      }
+
+      if (isCancelled) return;
+
+      const pose = new window.Pose({
+        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`
+      });
+
+      pose.setOptions({
+        modelComplexity: 1,
+        smoothLandmarks: true,
+        enableSegmentation: false,
+        minDetectionConfidence: 0.5,
+        minTrackingConfidence: 0.5
+      });
+
+      pose.onResults((results) => {
+        if (!canvasRef.current || !demoVideoRef.current || isCancelled) return;
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        const video = demoVideoRef.current;
+        const videoWidth = video.videoWidth || 640;
+        const videoHeight = video.videoHeight || 480;
+
+        canvas.width = videoWidth;
+        canvas.height = videoHeight;
+        ctx.clearRect(0, 0, videoWidth, videoHeight);
+
+        if (results.poseLandmarks) {
+          processKeypointsAndDraw(results.poseLandmarks, ctx, videoWidth, videoHeight);
+        }
+      });
+
+      poseEngine = pose;
+      detectorRef.current = pose;
+      setDetectorStatus('Real Human AI Pose Detector Active');
+
+      // Video frame loop
+      const processDemoFrame = async () => {
+        if (demoVideoRef.current && poseEngine && !demoVideoRef.current.paused && !demoVideoRef.current.ended && !isCancelled) {
+          try {
+            await poseEngine.send({ image: demoVideoRef.current });
+          } catch (err) {
+            console.warn('Demo frame warning:', err);
+          }
+        }
+        if (!isCancelled) {
+          animId = requestAnimationFrame(processDemoFrame);
+        }
+      };
+
+      processDemoFrame();
+    };
+
+    startHumanDemoProcessing();
+
+    return () => {
+      isCancelled = true;
+      if (animId) cancelAnimationFrame(animId);
+      if (poseEngine) poseEngine.close();
+    };
+  }, [isHumanDemoActive, selectedExercise]);
 
   const handleExerciseChange = (newEx) => {
     setSelectedExercise(newEx);
@@ -269,7 +373,7 @@ export default function ComputerVisionPose() {
         videoRef.current.srcObject = stream;
         await videoRef.current.play();
         setIsCameraActive(true);
-        setIsSimulating(false);
+        setIsHumanDemoActive(false);
 
         const pose = new window.Pose({
           locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`
@@ -300,7 +404,7 @@ export default function ComputerVisionPose() {
         });
 
         detectorRef.current = pose;
-        setDetectorStatus('MediaPipe Vision Active');
+        setDetectorStatus('MediaPipe WebCam Vision Active');
 
         const processFrame = async () => {
           if (videoRef.current && detectorRef.current && !videoRef.current.paused && !videoRef.current.ended) {
@@ -316,94 +420,20 @@ export default function ComputerVisionPose() {
       }
     } catch (err) {
       console.error('Camera initialization error:', err);
-      setDetectorStatus('WebCam Unavailable -> AI Simulation Active');
+      setDetectorStatus('WebCam Unavailable -> Real Human Demo Video Active');
       setIsCameraActive(false);
-      startAISimulation();
+      startHumanDemoVideo();
     }
   };
 
-  const startAISimulation = () => {
+  const startHumanDemoVideo = () => {
     stopTracking();
-    setIsSimulating(true);
     setIsCameraActive(false);
+    setIsHumanDemoActive(true);
     setSessionStartTime(Date.now());
-    setDetectorStatus('AI Motion Simulator Running');
-
-    const config = EXERCISES_CONFIG[selectedExercise];
-
-    let frameCount = 0;
-    const simLoop = () => {
-      if (!canvasRef.current) return;
-      const canvas = canvasRef.current;
-      const ctx = canvas.getContext('2d');
-      const w = 640;
-      const h = 480;
-      canvas.width = w;
-      canvas.height = h;
-      ctx.clearRect(0, 0, w, h);
-
-      frameCount++;
-      const speed = 0.05;
-      const progress = (Math.sin(frameCount * speed) + 1) / 2;
-      const angleRange = config.upThreshold - config.downThreshold;
-      const simulatedAngle = Math.round(config.downThreshold + (progress * angleRange));
-      
-      const syntheticLandmarks = createSyntheticPose(selectedExercise, simulatedAngle, w, h);
-      processKeypointsAndDraw(syntheticLandmarks, ctx, w, h, simulatedAngle);
-
-      animFrameIdRef.current = requestAnimationFrame(simLoop);
-    };
-    simLoop();
-  };
-
-  const createSyntheticPose = (exercise, angle, w, h) => {
-    const cX = 0.5;
-    const normAngle = (angle - 30) / 150;
-    
-    let nose = { x: cX, y: 0.18, visibility: 0.99 };
-    let lShoulder = { x: cX - 0.12, y: 0.28, visibility: 0.99 };
-    let rShoulder = { x: cX + 0.12, y: 0.28, visibility: 0.99 };
-    let lElbow = { x: cX - 0.18, y: 0.40, visibility: 0.99 };
-    let rElbow = { x: cX + 0.18, y: 0.40, visibility: 0.99 };
-    let lWrist = { x: cX - 0.20, y: 0.52, visibility: 0.99 };
-    let rWrist = { x: cX + 0.20, y: 0.52, visibility: 0.99 };
-    let lHip = { x: cX - 0.10, y: 0.54, visibility: 0.99 };
-    let rHip = { x: cX + 0.10, y: 0.54, visibility: 0.99 };
-    let lKnee = { x: cX - 0.11, y: 0.72 + (1 - normAngle) * 0.08, visibility: 0.99 };
-    let rKnee = { x: cX + 0.11, y: 0.72 + (1 - normAngle) * 0.08, visibility: 0.99 };
-    let lAnkle = { x: cX - 0.11, y: 0.90, visibility: 0.99 };
-    let rAnkle = { x: cX + 0.11, y: 0.90, visibility: 0.99 };
-
-    if (exercise === 'Pushups' || exercise === 'Plank') {
-      lShoulder = { x: 0.25, y: 0.55 + (1 - normAngle) * 0.1, visibility: 0.99 };
-      rShoulder = { x: 0.25, y: 0.55 + (1 - normAngle) * 0.1, visibility: 0.99 };
-      lElbow = { x: 0.20, y: 0.65, visibility: 0.99 };
-      rElbow = { x: 0.20, y: 0.65, visibility: 0.99 };
-      lWrist = { x: 0.22, y: 0.75, visibility: 0.99 };
-      rWrist = { x: 0.22, y: 0.75, visibility: 0.99 };
-      lHip = { x: 0.55, y: 0.53 + (1 - normAngle) * 0.08, visibility: 0.99 };
-      rHip = { x: 0.55, y: 0.53 + (1 - normAngle) * 0.08, visibility: 0.99 };
-      lKnee = { x: 0.72, y: 0.54, visibility: 0.99 };
-      rKnee = { x: 0.72, y: 0.54, visibility: 0.99 };
-      lAnkle = { x: 0.88, y: 0.55, visibility: 0.99 };
-      rAnkle = { x: 0.88, y: 0.55, visibility: 0.99 };
-    } else if (exercise === 'BicepCurls' || exercise === 'OverheadPress') {
-      lElbow = { x: cX - 0.14, y: 0.42, visibility: 0.99 };
-      rElbow = { x: cX + 0.14, y: 0.42, visibility: 0.99 };
-      const wristY = exercise === 'OverheadPress' ? 0.28 - (normAngle * 0.18) : 0.42 - (normAngle * 0.18);
-      lWrist = { x: cX - 0.14, y: wristY, visibility: 0.99 };
-      rWrist = { x: cX + 0.14, y: wristY, visibility: 0.99 };
-    }
-
-    const lmArray = new Array(33).fill({ x: 0, y: 0, visibility: 0 });
-    lmArray[0] = nose;
-    lmArray[11] = lShoulder; lmArray[12] = rShoulder;
-    lmArray[13] = lElbow;    lmArray[14] = rElbow;
-    lmArray[15] = lWrist;    lmArray[16] = rWrist;
-    lmArray[23] = lHip;      lmArray[24] = rHip;
-    lmArray[25] = lKnee;     lmArray[26] = rKnee;
-    lmArray[27] = lAnkle;    lmArray[28] = rAnkle;
-    return lmArray;
+    setDetectorStatus('Real Human Demo Video AI Tracking Active');
+    setFeedback(`Real Human AI Pose Analysis running for ${EXERCISES_CONFIG[selectedExercise].label}!`);
+    setFeedbackType('good');
   };
 
   const processKeypointsAndDraw = (landmarks, ctx, w, h, forcedAngle = null) => {
@@ -443,13 +473,14 @@ export default function ComputerVisionPose() {
       [23, 25], [25, 27], [24, 26], [26, 28]
     ];
 
+    // Glow Skeleton Lines on Real Human Body
     ctx.strokeStyle = '#06b6d4';
-    ctx.lineWidth = 3;
-    ctx.shadowColor = 'rgba(6, 182, 212, 0.5)';
-    ctx.shadowBlur = 8;
+    ctx.lineWidth = 4;
+    ctx.shadowColor = 'rgba(6, 182, 212, 0.8)';
+    ctx.shadowBlur = 12;
 
     connections.forEach(([i, j]) => {
-      if (landmarks[i] && landmarks[j] && (landmarks[i].visibility > 0.3 || isSimulating)) {
+      if (landmarks[i] && landmarks[j] && landmarks[i].visibility > 0.3) {
         ctx.beginPath();
         ctx.moveTo(landmarks[i].x * w, landmarks[i].y * h);
         ctx.lineTo(landmarks[j].x * w, landmarks[j].y * h);
@@ -457,13 +488,14 @@ export default function ComputerVisionPose() {
       }
     });
 
+    // Draw Joint Nodes
     landmarks.forEach((lm) => {
-      if (lm && (lm.visibility > 0.35 || isSimulating)) {
+      if (lm && lm.visibility > 0.35) {
         ctx.beginPath();
-        ctx.arc(lm.x * w, lm.y * h, 5, 0, 2 * Math.PI);
+        ctx.arc(lm.x * w, lm.y * h, 6, 0, 2 * Math.PI);
         ctx.fillStyle = '#10b981';
         ctx.shadowColor = '#10b981';
-        ctx.shadowBlur = 10;
+        ctx.shadowBlur = 14;
         ctx.fill();
       }
     });
@@ -496,9 +528,9 @@ export default function ComputerVisionPose() {
 
       ctx.save();
       ctx.fillStyle = isPostureValid ? '#22d3ee' : '#f43f5e';
-      ctx.font = 'bold 18px Inter, sans-serif';
+      ctx.font = 'bold 22px Inter, sans-serif';
       const vertexPt = p2 || { x: w / 2, y: h / 2 };
-      ctx.fillText(`${angle}°`, vertexPt.x + 10, vertexPt.y);
+      ctx.fillText(`${angle}°`, vertexPt.x + 12, vertexPt.y);
       ctx.restore();
 
       if (selectedExercise === 'Plank') {
@@ -534,7 +566,7 @@ export default function ComputerVisionPose() {
               }
               return newCount;
             });
-            setFeedback(`✅ Perfect Form Rep Counted!`);
+            setFeedback(`✅ Perfect Form Rep Counted! Total: ${repCount + 1}`);
             setFeedbackType('good');
             setPostureScore(99);
           }
@@ -552,7 +584,7 @@ export default function ComputerVisionPose() {
       tracks.forEach(track => track.stop());
     }
     setIsCameraActive(false);
-    setIsSimulating(false);
+    setIsHumanDemoActive(false);
     setDetectorStatus('Stopped');
 
     if (repCount > 0) {
@@ -578,14 +610,14 @@ export default function ComputerVisionPose() {
   };
 
   return (
-    <div className="animate-fade" style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', minWidth: 0, boxSizing: 'border-box' }}>
+    <div className="animate-fade" style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%', minWidth: 0, boxSizing: 'border-box' }}>
       
-      {/* Header Panel - Super Compact Single Row */}
+      {/* Header Panel */}
       <div className="glass-panel" style={{ padding: '10px 14px', borderRadius: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', width: '100%', minWidth: 0 }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <h2 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Real-Time Exercise CV Rep & Posture AI</h2>
-            <span style={{ background: 'rgba(6, 182, 212, 0.15)', color: '#22d3ee', padding: '2px 7px', borderRadius: '12px', fontSize: '0.68rem', fontWeight: 700, border: '1px solid rgba(6, 182, 212, 0.3)' }}>
+            <span style={{ background: 'rgba(6, 182, 212, 0.15)', color: '#22d3ee', padding: '2px 8px', borderRadius: '12px', fontSize: '0.68rem', fontWeight: 700, border: '1px solid rgba(6, 182, 212, 0.3)' }}>
               10 Exercises Biomechanics
             </span>
           </div>
@@ -605,11 +637,11 @@ export default function ComputerVisionPose() {
 
           <button 
             className="btn-secondary" 
-            onClick={isSimulating ? stopTracking : startAISimulation}
-            style={{ borderColor: isSimulating ? '#22d3ee' : 'var(--border-color)', color: isSimulating ? '#22d3ee' : '#fff', padding: '6px 12px', fontSize: '0.78rem' }}
+            onClick={isHumanDemoActive ? stopTracking : startHumanDemoVideo}
+            style={{ borderColor: isHumanDemoActive ? '#22d3ee' : 'var(--border-color)', color: isHumanDemoActive ? '#22d3ee' : '#fff', padding: '6px 12px', fontSize: '0.78rem' }}
           >
-            <Sparkles size={14} color="#22d3ee" />
-            {isSimulating ? 'Stop AI Demo' : 'AI Motion Simulator'}
+            <UserCheck size={14} color="#22d3ee" />
+            {isHumanDemoActive ? 'Stop Human Demo' : 'Real Human Demo Video AI'}
           </button>
 
           <button 
@@ -623,68 +655,96 @@ export default function ComputerVisionPose() {
         </div>
       </div>
 
-      {/* 10 Exercises Selector Chips */}
-      <div className="glass-panel" style={{ padding: '8px 12px', borderRadius: '12px', display: 'flex', gap: '6px', overflowX: 'auto', scrollbarWidth: 'none', width: '100%', minWidth: 0 }}>
-        {Object.keys(EXERCISES_CONFIG).map(exKey => {
-          const isSelected = selectedExercise === exKey;
-          const ex = EXERCISES_CONFIG[exKey];
-          return (
-            <button
-              key={exKey}
-              onClick={() => handleExerciseChange(exKey)}
-              style={{
-                padding: '5px 10px',
-                borderRadius: '8px',
-                border: isSelected ? '1px solid #06b6d4' : '1px solid var(--border-color)',
-                background: isSelected ? 'linear-gradient(135deg, rgba(6, 182, 212, 0.25) 0%, rgba(15, 23, 42, 0.9) 100%)' : 'rgba(15, 23, 42, 0.4)',
-                color: isSelected ? '#fff' : 'var(--text-muted)',
-                fontWeight: isSelected ? 700 : 500,
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                fontSize: '0.75rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '5px',
-                transition: 'all 0.15s ease'
-              }}
-            >
-              <span>{ex.label}</span>
-              <span style={{ fontSize: '0.62rem', padding: '1px 4px', borderRadius: '4px', background: isSelected ? '#06b6d4' : 'rgba(255,255,255,0.08)', color: '#fff' }}>
-                {ex.category}
-              </span>
-            </button>
-          );
-        })}
+      {/* ALL 10 EXERCISES IN MULTI-LINE FLEX WRAP GRID */}
+      <div className="glass-panel" style={{ padding: '10px 14px', borderRadius: '14px', width: '100%', minWidth: 0, boxSizing: 'border-box' }}>
+        <div style={{ fontSize: '0.74rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <Layers size={13} color="#22d3ee" /> Select Exercise (All 10 Available Below):
+        </div>
+
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', width: '100%' }}>
+          {Object.keys(EXERCISES_CONFIG).map(exKey => {
+            const isSelected = selectedExercise === exKey;
+            const ex = EXERCISES_CONFIG[exKey];
+            return (
+              <button
+                key={exKey}
+                onClick={() => handleExerciseChange(exKey)}
+                style={{
+                  padding: '6px 12px',
+                  borderRadius: '10px',
+                  border: isSelected ? '1.5px solid #06b6d4' : '1px solid var(--border-color)',
+                  background: isSelected ? 'linear-gradient(135deg, rgba(6, 182, 212, 0.3) 0%, rgba(15, 23, 42, 0.95) 100%)' : 'rgba(15, 23, 42, 0.6)',
+                  color: isSelected ? '#fff' : 'var(--text-muted)',
+                  fontWeight: isSelected ? 700 : 500,
+                  cursor: 'pointer',
+                  fontSize: '0.78rem',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  transition: 'all 0.15s ease',
+                  boxShadow: isSelected ? '0 0 12px rgba(6, 182, 212, 0.3)' : 'none'
+                }}
+              >
+                <span style={{ width: '18px', height: '18px', borderRadius: '50%', background: isSelected ? '#06b6d4' : 'rgba(255,255,255,0.1)', color: '#fff', fontSize: '0.65rem', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700 }}>
+                  {ex.id}
+                </span>
+                <span>{ex.label}</span>
+                <span style={{ fontSize: '0.62rem', padding: '1px 5px', borderRadius: '4px', background: isSelected ? 'rgba(6, 182, 212, 0.4)' : 'rgba(255,255,255,0.08)', color: '#fff' }}>
+                  {ex.category}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Info Banner for Selected Exercise */}
       <div className="glass-panel" style={{ padding: '8px 14px', borderRadius: '10px', background: 'rgba(6, 182, 212, 0.08)', border: '1px solid rgba(6, 182, 212, 0.2)', display: 'flex', alignItems: 'center', gap: '8px', width: '100%', minWidth: 0 }}>
         <Info size={15} color="#22d3ee" style={{ flexShrink: 0 }} />
-        <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-          <strong style={{ color: '#22d3ee' }}>{currentExConfig.label} Algorithm: </strong>
+        <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>
+          <strong style={{ color: '#22d3ee' }}>Exercise #{EXERCISES_CONFIG[selectedExercise].id} - {currentExConfig.label} Algorithm: </strong>
           {currentExConfig.description}
         </div>
       </div>
 
-      {/* Main Vision Grid - Dynamic 100% Fit */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 270px', gap: '10px', width: '100%', minWidth: 0 }}>
+      {/* Main Vision Grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 260px', gap: '10px', width: '100%', minWidth: 0 }}>
         
-        {/* Real-Time Video & Canvas Overlay - Fits dynamically */}
+        {/* Real-Time Video & Canvas Overlay Area */}
         <div className="glass-panel" style={{
           borderRadius: '16px', position: 'relative', overflow: 'hidden', height: 'clamp(280px, 42vh, 340px)', background: '#020617', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', minWidth: 0
         }}>
-          {(isCameraActive || isSimulating) ? (
+          {(isCameraActive || isHumanDemoActive) ? (
             <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+              
+              {/* WebCam Video */}
               <video
                 ref={videoRef}
                 playsInline
                 muted
                 style={{
                   width: '100%', height: '100%', objectFit: 'cover',
-                  transform: isCameraActive ? 'scaleX(-1)' : 'none',
+                  transform: 'scaleX(-1)',
                   display: isCameraActive ? 'block' : 'none'
                 }}
               />
+
+              {/* Real Human Demo Video Loop */}
+              <video
+                ref={demoVideoRef}
+                src={currentExConfig.demoVideo}
+                autoPlay
+                loop
+                muted
+                playsInline
+                crossOrigin="anonymous"
+                style={{
+                  width: '100%', height: '100%', objectFit: 'cover',
+                  display: isHumanDemoActive ? 'block' : 'none'
+                }}
+              />
+
+              {/* Canvas Overlay for Joints & Vector Angles */}
               <canvas
                 ref={canvasRef}
                 style={{
@@ -696,7 +756,7 @@ export default function ComputerVisionPose() {
 
               {/* Status Badge */}
               <div style={{ position: 'absolute', top: '10px', left: '10px', background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)', padding: '3px 8px', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.7rem', border: '1px solid rgba(6, 182, 212, 0.4)' }}>
-                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: isSimulating ? '#22d3ee' : '#10b981', boxShadow: isSimulating ? '0 0 6px #22d3ee' : '0 0 6px #10b981' }}></span>
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: isHumanDemoActive ? '#22d3ee' : '#10b981', boxShadow: isHumanDemoActive ? '0 0 6px #22d3ee' : '0 0 6px #10b981' }}></span>
                 {detectorStatus}
               </div>
 
@@ -713,26 +773,26 @@ export default function ComputerVisionPose() {
             <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '16px' }}>
               <Camera size={40} color="var(--primary)" style={{ opacity: 0.5, marginBottom: '8px' }} />
               <h3 style={{ fontSize: '0.98rem', fontWeight: 700, color: '#fff', marginBottom: '3px' }}>
-                WebCam & AI Motion Detection Ready
+                Real Human Video & WebCam AI Ready
               </h3>
-              <p style={{ fontSize: '0.76rem', maxWidth: '320px', margin: '0 auto 12px', color: 'var(--text-muted)' }}>
-                Select an exercise from above and start WebCam AI Vision or test with AI Motion Simulator.
+              <p style={{ fontSize: '0.76rem', maxWidth: '340px', margin: '0 auto 12px', color: 'var(--text-muted)' }}>
+                Watch a real human perform workouts with live MediaPipe AI joint angle tracking overlay, or use your WebCam.
               </p>
 
               <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
                 <button className="btn-primary" onClick={startRealTimeTracking} style={{ padding: '6px 12px', fontSize: '0.78rem' }}>
                   <Play size={13} /> Activate Camera
                 </button>
-                <button className="btn-secondary" onClick={startAISimulation} style={{ padding: '6px 12px', fontSize: '0.78rem' }}>
-                  <Sparkles size={13} color="#22d3ee" /> Test AI Simulator
+                <button className="btn-secondary" onClick={startHumanDemoVideo} style={{ padding: '6px 12px', fontSize: '0.78rem' }}>
+                  <UserCheck size={13} color="#22d3ee" /> Real Human Demo Video AI
                 </button>
               </div>
             </div>
           )}
         </div>
 
-        {/* Right Dashboard Column - Fixed 270px Width */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '270px', minWidth: '270px' }}>
+        {/* Right Dashboard Column */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '260px', minWidth: '260px' }}>
           
           {/* Rep / Plank Counter Card */}
           <div className="glass-panel" style={{ padding: '12px', borderRadius: '14px', textAlign: 'center', background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.12) 0%, rgba(15, 23, 42, 0.9) 100%)', border: '1px solid rgba(6, 182, 212, 0.25)' }}>
