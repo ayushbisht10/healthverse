@@ -578,56 +578,53 @@ export default function ComputerVisionPose() {
   };
 
   return (
-    <div className="animate-fade" style={{ display: 'flex', flexDirection: 'column', gap: '14px', maxWidth: '1240px', margin: '0 auto' }}>
+    <div className="animate-fade" style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', minWidth: 0, boxSizing: 'border-box' }}>
       
-      {/* Header Panel - Compact */}
-      <div className="glass-panel" style={{ padding: '14px 18px', borderRadius: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+      {/* Header Panel - Super Compact Single Row */}
+      <div className="glass-panel" style={{ padding: '10px 14px', borderRadius: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', width: '100%', minWidth: 0 }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <h2 style={{ fontSize: '1.2rem', fontWeight: 700 }}>Real-Time Exercise CV Rep & Posture AI</h2>
-            <span style={{ background: 'rgba(6, 182, 212, 0.15)', color: '#22d3ee', padding: '3px 8px', borderRadius: '16px', fontSize: '0.7rem', fontWeight: 700, border: '1px solid rgba(6, 182, 212, 0.3)' }}>
+            <h2 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Real-Time Exercise CV Rep & Posture AI</h2>
+            <span style={{ background: 'rgba(6, 182, 212, 0.15)', color: '#22d3ee', padding: '2px 7px', borderRadius: '12px', fontSize: '0.68rem', fontWeight: 700, border: '1px solid rgba(6, 182, 212, 0.3)' }}>
               10 Exercises Biomechanics
             </span>
           </div>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '2px' }}>
-            Joint vector tracking, form alignment scoring & live coaching cues.
-          </p>
         </div>
 
         {/* Action Controls */}
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
           
           <button 
             className="btn-secondary" 
             onClick={() => setSoundEnabled(!soundEnabled)}
             title={soundEnabled ? 'Mute Audio' : 'Enable Audio'}
-            style={{ padding: '8px 12px', fontSize: '0.8rem' }}
+            style={{ padding: '6px 10px', fontSize: '0.78rem' }}
           >
-            {soundEnabled ? <Volume2 size={16} color="#10b981" /> : <VolumeX size={16} color="#f43f5e" />}
+            {soundEnabled ? <Volume2 size={15} color="#10b981" /> : <VolumeX size={15} color="#f43f5e" />}
           </button>
 
           <button 
             className="btn-secondary" 
             onClick={isSimulating ? stopTracking : startAISimulation}
-            style={{ borderColor: isSimulating ? '#22d3ee' : 'var(--border-color)', color: isSimulating ? '#22d3ee' : '#fff', padding: '8px 14px', fontSize: '0.82rem' }}
+            style={{ borderColor: isSimulating ? '#22d3ee' : 'var(--border-color)', color: isSimulating ? '#22d3ee' : '#fff', padding: '6px 12px', fontSize: '0.78rem' }}
           >
-            <Sparkles size={15} color="#22d3ee" />
+            <Sparkles size={14} color="#22d3ee" />
             {isSimulating ? 'Stop AI Demo' : 'AI Motion Simulator'}
           </button>
 
           <button 
             className={isCameraActive ? 'btn-secondary' : 'btn-primary'} 
             onClick={isCameraActive ? stopTracking : startRealTimeTracking}
-            style={{ padding: '8px 16px', fontSize: '0.82rem' }}
+            style={{ padding: '6px 14px', fontSize: '0.78rem' }}
           >
-            {isCameraActive ? <Square size={15} color="#f43f5e" /> : <Play size={15} />}
+            {isCameraActive ? <Square size={14} color="#f43f5e" /> : <Play size={14} />}
             {isCameraActive ? 'Stop Camera' : 'Start WebCam AI'}
           </button>
         </div>
       </div>
 
       {/* 10 Exercises Selector Chips */}
-      <div className="glass-panel" style={{ padding: '10px 14px', borderRadius: '14px', display: 'flex', gap: '8px', overflowX: 'auto', scrollbarWidth: 'none' }}>
+      <div className="glass-panel" style={{ padding: '8px 12px', borderRadius: '12px', display: 'flex', gap: '6px', overflowX: 'auto', scrollbarWidth: 'none', width: '100%', minWidth: 0 }}>
         {Object.keys(EXERCISES_CONFIG).map(exKey => {
           const isSelected = selectedExercise === exKey;
           const ex = EXERCISES_CONFIG[exKey];
@@ -636,23 +633,23 @@ export default function ComputerVisionPose() {
               key={exKey}
               onClick={() => handleExerciseChange(exKey)}
               style={{
-                padding: '6px 12px',
-                borderRadius: '10px',
+                padding: '5px 10px',
+                borderRadius: '8px',
                 border: isSelected ? '1px solid #06b6d4' : '1px solid var(--border-color)',
                 background: isSelected ? 'linear-gradient(135deg, rgba(6, 182, 212, 0.25) 0%, rgba(15, 23, 42, 0.9) 100%)' : 'rgba(15, 23, 42, 0.4)',
                 color: isSelected ? '#fff' : 'var(--text-muted)',
                 fontWeight: isSelected ? 700 : 500,
                 cursor: 'pointer',
                 whiteSpace: 'nowrap',
-                fontSize: '0.78rem',
+                fontSize: '0.75rem',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '6px',
+                gap: '5px',
                 transition: 'all 0.15s ease'
               }}
             >
               <span>{ex.label}</span>
-              <span style={{ fontSize: '0.64rem', padding: '1px 5px', borderRadius: '4px', background: isSelected ? '#06b6d4' : 'rgba(255,255,255,0.08)', color: '#fff' }}>
+              <span style={{ fontSize: '0.62rem', padding: '1px 4px', borderRadius: '4px', background: isSelected ? '#06b6d4' : 'rgba(255,255,255,0.08)', color: '#fff' }}>
                 {ex.category}
               </span>
             </button>
@@ -661,20 +658,20 @@ export default function ComputerVisionPose() {
       </div>
 
       {/* Info Banner for Selected Exercise */}
-      <div className="glass-panel" style={{ padding: '10px 16px', borderRadius: '12px', background: 'rgba(6, 182, 212, 0.08)', border: '1px solid rgba(6, 182, 212, 0.2)', display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <Info size={17} color="#22d3ee" style={{ flexShrink: 0 }} />
-        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+      <div className="glass-panel" style={{ padding: '8px 14px', borderRadius: '10px', background: 'rgba(6, 182, 212, 0.08)', border: '1px solid rgba(6, 182, 212, 0.2)', display: 'flex', alignItems: 'center', gap: '8px', width: '100%', minWidth: 0 }}>
+        <Info size={15} color="#22d3ee" style={{ flexShrink: 0 }} />
+        <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           <strong style={{ color: '#22d3ee' }}>{currentExConfig.label} Algorithm: </strong>
-          {currentExConfig.description} (Target: {currentExConfig.downThreshold}° to {currentExConfig.upThreshold}°)
+          {currentExConfig.description}
         </div>
       </div>
 
-      {/* Main Vision Grid - Balanced Dimensions */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 310px', gap: '14px' }}>
+      {/* Main Vision Grid - Dynamic 100% Fit */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 270px', gap: '10px', width: '100%', minWidth: 0 }}>
         
-        {/* Real-Time Video & Canvas Overlay - Reduced Height (360px) */}
+        {/* Real-Time Video & Canvas Overlay - Fits dynamically */}
         <div className="glass-panel" style={{
-          borderRadius: '18px', position: 'relative', overflow: 'hidden', height: '360px', background: '#020617', display: 'flex', alignItems: 'center', justifyContent: 'center'
+          borderRadius: '16px', position: 'relative', overflow: 'hidden', height: 'clamp(280px, 42vh, 340px)', background: '#020617', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', minWidth: 0
         }}>
           {(isCameraActive || isSimulating) ? (
             <div style={{ width: '100%', height: '100%', position: 'relative' }}>
@@ -698,102 +695,102 @@ export default function ComputerVisionPose() {
               />
 
               {/* Status Badge */}
-              <div style={{ position: 'absolute', top: '12px', left: '12px', background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)', padding: '4px 10px', borderRadius: '16px', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', border: '1px solid rgba(6, 182, 212, 0.4)' }}>
-                <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: isSimulating ? '#22d3ee' : '#10b981', boxShadow: isSimulating ? '0 0 8px #22d3ee' : '0 0 8px #10b981' }}></span>
+              <div style={{ position: 'absolute', top: '10px', left: '10px', background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)', padding: '3px 8px', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.7rem', border: '1px solid rgba(6, 182, 212, 0.4)' }}>
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: isSimulating ? '#22d3ee' : '#10b981', boxShadow: isSimulating ? '0 0 6px #22d3ee' : '0 0 6px #10b981' }}></span>
                 {detectorStatus}
               </div>
 
               {/* Live Joint Angle Floating Meter */}
               {currentAngle > 0 && (
-                <div style={{ position: 'absolute', bottom: '12px', left: '12px', background: 'rgba(0,0,0,0.8)', padding: '6px 12px', borderRadius: '10px', fontSize: '0.8rem', color: '#22d3ee', fontWeight: 700, border: '1px solid rgba(6, 182, 212, 0.3)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <Activity size={14} color="#22d3ee" />
-                  Angle: <span style={{ fontSize: '1rem', color: '#fff' }}>{currentAngle}°</span>
+                <div style={{ position: 'absolute', bottom: '10px', left: '10px', background: 'rgba(0,0,0,0.8)', padding: '4px 10px', borderRadius: '8px', fontSize: '0.75rem', color: '#22d3ee', fontWeight: 700, border: '1px solid rgba(6, 182, 212, 0.3)', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                  <Activity size={13} color="#22d3ee" />
+                  Angle: <span style={{ fontSize: '0.92rem', color: '#fff' }}>{currentAngle}°</span>
                 </div>
               )}
             </div>
 
           ) : (
-            <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '24px' }}>
-              <Camera size={48} color="var(--primary)" style={{ opacity: 0.5, marginBottom: '12px' }} />
-              <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#fff', marginBottom: '4px' }}>
+            <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '16px' }}>
+              <Camera size={40} color="var(--primary)" style={{ opacity: 0.5, marginBottom: '8px' }} />
+              <h3 style={{ fontSize: '0.98rem', fontWeight: 700, color: '#fff', marginBottom: '3px' }}>
                 WebCam & AI Motion Detection Ready
               </h3>
-              <p style={{ fontSize: '0.8rem', maxWidth: '360px', margin: '0 auto 16px', color: 'var(--text-muted)' }}>
+              <p style={{ fontSize: '0.76rem', maxWidth: '320px', margin: '0 auto 12px', color: 'var(--text-muted)' }}>
                 Select an exercise from above and start WebCam AI Vision or test with AI Motion Simulator.
               </p>
 
-              <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
-                <button className="btn-primary" onClick={startRealTimeTracking} style={{ padding: '8px 16px', fontSize: '0.82rem' }}>
-                  <Play size={14} /> Activate Camera
+              <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                <button className="btn-primary" onClick={startRealTimeTracking} style={{ padding: '6px 12px', fontSize: '0.78rem' }}>
+                  <Play size={13} /> Activate Camera
                 </button>
-                <button className="btn-secondary" onClick={startAISimulation} style={{ padding: '8px 14px', fontSize: '0.82rem' }}>
-                  <Sparkles size={14} color="#22d3ee" /> Test AI Simulator
+                <button className="btn-secondary" onClick={startAISimulation} style={{ padding: '6px 12px', fontSize: '0.78rem' }}>
+                  <Sparkles size={13} color="#22d3ee" /> Test AI Simulator
                 </button>
               </div>
             </div>
           )}
         </div>
 
-        {/* Right Dashboard Column - Compact Layout */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        {/* Right Dashboard Column - Fixed 270px Width */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '270px', minWidth: '270px' }}>
           
           {/* Rep / Plank Counter Card */}
-          <div className="glass-panel" style={{ padding: '16px', borderRadius: '16px', textAlign: 'center', background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.12) 0%, rgba(15, 23, 42, 0.9) 100%)', border: '1px solid rgba(6, 182, 212, 0.25)' }}>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.8px', fontWeight: 700 }}>
+          <div className="glass-panel" style={{ padding: '12px', borderRadius: '14px', textAlign: 'center', background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.12) 0%, rgba(15, 23, 42, 0.9) 100%)', border: '1px solid rgba(6, 182, 212, 0.25)' }}>
+            <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.8px', fontWeight: 700 }}>
               {selectedExercise === 'Plank' ? 'Plank Hold Time' : `${currentExConfig.label} Reps`}
             </div>
             
-            <div style={{ fontSize: '3.2rem', fontWeight: 900, fontFamily: 'var(--font-display)', color: '#fff', margin: '2px 0', lineHeight: 1 }}>
+            <div style={{ fontSize: '2.8rem', fontWeight: 900, fontFamily: 'var(--font-display)', color: '#fff', margin: '2px 0', lineHeight: 1 }}>
               {selectedExercise === 'Plank' ? `${plankHoldSeconds}s` : repCount}
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '6px', marginTop: '8px' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '6px', marginTop: '6px' }}>
               <button 
                 className="btn-secondary" 
-                style={{ padding: '4px 10px', fontSize: '0.72rem' }} 
+                style={{ padding: '3px 8px', fontSize: '0.7rem' }} 
                 onClick={() => { setRepCount(0); setPlankHoldSeconds(0); repStageRef.current = 'up'; }}
               >
-                <RefreshCw size={12} /> Reset
+                <RefreshCw size={11} /> Reset
               </button>
             </div>
           </div>
 
           {/* Form Alignment Score Meter */}
-          <div className="glass-panel" style={{ padding: '14px', borderRadius: '16px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-              <span style={{ fontSize: '0.8rem', fontWeight: 600 }}>Posture Alignment Score</span>
-              <span style={{ fontSize: '0.98rem', fontWeight: 800, color: postureScore > 80 ? '#10b981' : '#f43f5e' }}>
+          <div className="glass-panel" style={{ padding: '12px', borderRadius: '14px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+              <span style={{ fontSize: '0.76rem', fontWeight: 600 }}>Posture Score</span>
+              <span style={{ fontSize: '0.92rem', fontWeight: 800, color: postureScore > 80 ? '#10b981' : '#f43f5e' }}>
                 {postureScore}%
               </span>
             </div>
-            <div style={{ width: '100%', height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
+            <div style={{ width: '100%', height: '5px', background: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
               <div style={{ width: `${postureScore}%`, height: '100%', background: postureScore > 80 ? 'linear-gradient(90deg, #06b6d4, #10b981)' : 'linear-gradient(90deg, #f59e0b, #f43f5e)', transition: 'all 0.3s ease' }}></div>
             </div>
           </div>
 
           {/* Real-time AI Coach Feedback Card */}
           <div className="glass-panel" style={{
-            padding: '14px', borderRadius: '16px',
+            padding: '12px', borderRadius: '14px',
             background: feedbackType === 'warn' ? 'rgba(244, 63, 94, 0.12)' : 'rgba(16, 185, 129, 0.12)',
             border: feedbackType === 'warn' ? '1px solid rgba(244, 63, 94, 0.3)' : '1px solid rgba(16, 185, 129, 0.3)'
           }}>
-            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: feedbackType === 'warn' ? '#f43f5e' : '#10b981', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-              {feedbackType === 'warn' ? <AlertCircle size={14} /> : <CheckCircle size={14} />} Form Coach
+            <div style={{ fontSize: '0.72rem', fontWeight: 700, color: feedbackType === 'warn' ? '#f43f5e' : '#10b981', marginBottom: '3px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              {feedbackType === 'warn' ? <AlertCircle size={13} /> : <CheckCircle size={13} />} Form Coach
             </div>
-            <div style={{ fontSize: '0.82rem', color: '#fff', fontWeight: 600, lineHeight: '1.3' }}>
+            <div style={{ fontSize: '0.78rem', color: '#fff', fontWeight: 600, lineHeight: '1.3' }}>
               "{feedback}"
             </div>
           </div>
 
           {/* Workout Log Session Preview */}
           {workoutLog.length > 0 && (
-            <div className="glass-panel" style={{ padding: '12px 14px', borderRadius: '16px' }}>
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <History size={13} color="#22d3ee" /> Session Log
+            <div className="glass-panel" style={{ padding: '10px 12px', borderRadius: '14px' }}>
+              <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <History size={12} color="#22d3ee" /> Session Log
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 {workoutLog.map(item => (
-                  <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem', padding: '4px 8px', background: 'rgba(255,255,255,0.04)', borderRadius: '6px' }}>
+                  <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.72rem', padding: '3px 6px', background: 'rgba(255,255,255,0.04)', borderRadius: '5px' }}>
                     <span style={{ fontWeight: 600 }}>{item.exercise} ({item.reps})</span>
                     <span style={{ color: '#10b981', fontWeight: 700 }}>~{item.calories} kcal</span>
                   </div>

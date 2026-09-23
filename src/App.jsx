@@ -310,7 +310,7 @@ export default function App() {
         </header>
 
         {/* Main View Render */}
-        <main style={{ padding: '32px', flex: 1 }}>
+        <main style={{ padding: '20px 24px', flex: 1, minWidth: 0, overflowX: 'hidden' }}>
           {activeTab === 'dashboard' && (
             <Dashboard 
               setActiveTab={setActiveTab}
