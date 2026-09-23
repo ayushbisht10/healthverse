@@ -3,7 +3,6 @@ import {
   Camera, Video, AlertCircle, CheckCircle, RefreshCw, Zap, Award, Activity, 
   Play, Square, Info, Volume2, VolumeX, History, Flame, ShieldAlert, Sparkles, Layers
 } from 'lucide-react';
-import { SupabaseDataEngine } from '../lib/supabase';
 
 // ==========================================
 // 10 EXERCISES BIOMECHANICAL ALGORITHMS CONFIG
@@ -14,7 +13,7 @@ const EXERCISES_CONFIG = {
     category: 'Lower Body',
     difficulty: 'Intermediate',
     caloriesPerRep: 0.32,
-    description: 'Tracks Hip-Knee-Ankle vector angle & spine alignment. Count rep when knees flex below 100° and extend >160°.',
+    description: 'Tracks Hip-Knee-Ankle vector angle. Count rep when knees flex <100° and extend >160°.',
     targetAngleJoints: ['hip', 'knee', 'ankle'],
     downThreshold: 100,
     upThreshold: 160,
@@ -28,7 +27,7 @@ const EXERCISES_CONFIG = {
     category: 'Chest & Core',
     difficulty: 'Intermediate',
     caloriesPerRep: 0.45,
-    description: 'Tracks Shoulder-Elbow-Wrist flexion & spine plank alignment. Count rep when elbows bend below 90° and extend >150°.',
+    description: 'Tracks Shoulder-Elbow-Wrist flexion. Count rep when elbows bend <90° and extend >150°.',
     targetAngleJoints: ['shoulder', 'elbow', 'wrist'],
     downThreshold: 90,
     upThreshold: 150,
@@ -42,7 +41,7 @@ const EXERCISES_CONFIG = {
     category: 'Arms',
     difficulty: 'Beginner',
     caloriesPerRep: 0.20,
-    description: 'Tracks Shoulder-Elbow-Wrist arm flexion. Count rep when elbow flexes <50° and extends fully >150°.',
+    description: 'Tracks Shoulder-Elbow-Wrist arm flexion. Count rep when elbow flexes <50° and extends >150°.',
     targetAngleJoints: ['shoulder', 'elbow', 'wrist'],
     downThreshold: 50,
     upThreshold: 150,
@@ -53,10 +52,10 @@ const EXERCISES_CONFIG = {
   },
   JumpingJacks: {
     label: 'Jumping Jacks',
-    category: 'Cardio Full Body',
+    category: 'Cardio',
     difficulty: 'Beginner',
     caloriesPerRep: 0.15,
-    description: 'Tracks Overhead Arm angle (Wrist-Shoulder-Hip) & Leg spread. Rep counted when hands touch overhead >150°.',
+    description: 'Tracks Overhead Arm angle (Wrist-Shoulder-Hip). Rep counted when hands touch overhead >150°.',
     targetAngleJoints: ['wrist', 'shoulder', 'hip'],
     downThreshold: 65,
     upThreshold: 150,
@@ -67,10 +66,10 @@ const EXERCISES_CONFIG = {
   },
   Lunges: {
     label: 'Forward Lunges',
-    category: 'Legs & Glutes',
+    category: 'Legs',
     difficulty: 'Intermediate',
     caloriesPerRep: 0.38,
-    description: 'Tracks lead Hip-Knee-Ankle flexion. Count rep when front knee flexes <95° and returns straight >165°.',
+    description: 'Tracks lead Hip-Knee-Ankle flexion. Count rep when front knee flexes <95° and extends >165°.',
     targetAngleJoints: ['hip', 'knee', 'ankle'],
     downThreshold: 95,
     upThreshold: 165,
@@ -80,11 +79,11 @@ const EXERCISES_CONFIG = {
     postureWarning: '⚠️ Keep torso vertical. Avoid leaning forward!'
   },
   OverheadPress: {
-    label: 'Shoulder / Overhead Press',
-    category: 'Shoulders & Arms',
+    label: 'Shoulder Press',
+    category: 'Shoulders',
     difficulty: 'Intermediate',
     caloriesPerRep: 0.35,
-    description: 'Tracks Elbow-Shoulder-Hip & Shoulder-Elbow-Wrist lockout. Rep counted when arms lock out overhead >160°.',
+    description: 'Tracks Elbow-Shoulder-Hip lockout. Rep counted when arms lock out overhead >160°.',
     targetAngleJoints: ['elbow', 'shoulder', 'hip'],
     downThreshold: 85,
     upThreshold: 160,
@@ -95,24 +94,24 @@ const EXERCISES_CONFIG = {
   },
   LegRaises: {
     label: 'Lying Leg Raises',
-    category: 'Abs & Core',
+    category: 'Abs',
     difficulty: 'Advanced',
     caloriesPerRep: 0.28,
-    description: 'Tracks lying Shoulder-Hip-Knee angle. Count rep when legs raise vertical >65° off ground and lower <25°.',
+    description: 'Tracks lying Shoulder-Hip-Knee angle. Count rep when legs raise vertical >65° and lower <25°.',
     targetAngleJoints: ['shoulder', 'hip', 'knee'],
     downThreshold: 25,
     upThreshold: 65,
     goodFeedback: 'Controlled abs contraction! Straight leg lift.',
     badFeedback: '⚠️ Warning: Raise legs higher toward vertical.',
-    postureCheck: () => true, // Lying posture
+    postureCheck: () => true,
     postureWarning: '⚠️ Keep lower back pressed firmly against ground.'
   },
   TricepDips: {
     label: 'Tricep Dips',
-    category: 'Arms & Chest',
+    category: 'Arms',
     difficulty: 'Intermediate',
     caloriesPerRep: 0.30,
-    description: 'Tracks Shoulder-Elbow-Wrist flexion. Count rep when elbow flexes below 90° and extends >155°.',
+    description: 'Tracks Shoulder-Elbow-Wrist flexion. Count rep when elbow flexes <90° and extends >155°.',
     targetAngleJoints: ['shoulder', 'elbow', 'wrist'],
     downThreshold: 90,
     upThreshold: 155,
@@ -123,7 +122,7 @@ const EXERCISES_CONFIG = {
   },
   HighKnees: {
     label: 'High Knees',
-    category: 'Cardio & Abs',
+    category: 'Cardio',
     difficulty: 'Beginner',
     caloriesPerRep: 0.12,
     description: 'Tracks Hip elevation (Shoulder-Hip-Knee). Count rep when knee drives up parallel to hip (<90°).',
@@ -136,10 +135,10 @@ const EXERCISES_CONFIG = {
     postureWarning: '⚠️ Avoid leaning backwards. Stay light on feet.'
   },
   Plank: {
-    label: 'Plank Hold & Alignment',
-    category: 'Core & Stability',
+    label: 'Plank Hold',
+    category: 'Core',
     difficulty: 'Intermediate',
-    caloriesPerRep: 0.05, // per second
+    caloriesPerRep: 0.05,
     description: 'Tracks Spine alignment vector (Shoulder-Hip-Ankle ~180°). Monitors hold duration & form stability.',
     targetAngleJoints: ['shoulder', 'hip', 'ankle'],
     downThreshold: 165,
@@ -151,9 +150,7 @@ const EXERCISES_CONFIG = {
   }
 };
 
-// ==========================================
-// VECTOR GEOMETRY UTILITIES
-// ==========================================
+// Vector Geometry Utility
 function calculateAngle(a, b, c) {
   if (!a || !b || !c) return 0;
   const radians = Math.atan2(c.y - b.y, c.x - b.x) - Math.atan2(a.y - b.y, a.x - b.x);
@@ -164,7 +161,7 @@ function calculateAngle(a, b, c) {
   return Math.round(angle);
 }
 
-// Sound Synth Feedback Utility via Web Audio API
+// Sound Synth Feedback
 let audioCtx = null;
 function playSoundCue(type = 'rep') {
   try {
@@ -181,19 +178,19 @@ function playSoundCue(type = 'rep') {
 
     if (type === 'rep') {
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
-      osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.12); // A5
-      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.1);
+      gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.15);
+    } else {
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
       osc.start();
       osc.stop(audioCtx.currentTime + 0.2);
-    } else {
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
-      gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.25);
     }
   } catch (err) {
     console.warn('Audio feedback failed:', err);
@@ -207,7 +204,7 @@ export default function ComputerVisionPose() {
   const [repCount, setRepCount] = useState(0);
   const [currentAngle, setCurrentAngle] = useState(0);
   const [postureScore, setPostureScore] = useState(98);
-  const [feedback, setFeedback] = useState('Stand in front of WebCam or start AI Simulation.');
+  const [feedback, setFeedback] = useState('Select an exercise & start WebCam or AI Simulation.');
   const [feedbackType, setFeedbackType] = useState('good');
   const [detectorStatus, setDetectorStatus] = useState('Idle');
   const [soundEnabled, setSoundEnabled] = useState(true);
@@ -220,17 +217,13 @@ export default function ComputerVisionPose() {
   const repStageRef = useRef('up');
   const detectorRef = useRef(null);
   const animFrameIdRef = useRef(null);
-  const simAngleRef = useRef(170);
 
-  // Exercise config shortcut
   const currentExConfig = EXERCISES_CONFIG[selectedExercise];
 
-  // Sound ref wrapper
   const triggerSound = (type) => {
     if (soundEnabled) playSoundCue(type);
   };
 
-  // Plank hold timer
   useEffect(() => {
     let timer;
     if ((isCameraActive || isSimulating) && selectedExercise === 'Plank' && feedbackType === 'good') {
@@ -241,26 +234,22 @@ export default function ComputerVisionPose() {
     return () => clearInterval(timer);
   }, [isCameraActive, isSimulating, selectedExercise, feedbackType]);
 
-  // Reset exercise state on select
   const handleExerciseChange = (newEx) => {
     setSelectedExercise(newEx);
     setRepCount(0);
     setPlankHoldSeconds(0);
     repStageRef.current = 'up';
-    setFeedback(`Selected ${EXERCISES_CONFIG[newEx].label}. Ready to detect!`);
+    setFeedback(`Selected ${EXERCISES_CONFIG[newEx].label}. Ready to track!`);
     setFeedbackType('good');
     setPostureScore(98);
   };
 
-  // ==========================================
-  // REAL WEBCAM MEDIAPIPE TRACKING
-  // ==========================================
   const startRealTimeTracking = async () => {
-    stopTracking(); // Clear any running simulation/camera
+    stopTracking();
     setSessionStartTime(Date.now());
 
     try {
-      setDetectorStatus('Loading MediaPipe AI Engine...');
+      setDetectorStatus('Loading MediaPipe Engine...');
 
       if (!window.Pose) {
         await new Promise((resolve, reject) => {
@@ -311,7 +300,7 @@ export default function ComputerVisionPose() {
         });
 
         detectorRef.current = pose;
-        setDetectorStatus('60 FPS MediaPipe AI Engine Active');
+        setDetectorStatus('MediaPipe Vision Active');
 
         const processFrame = async () => {
           if (videoRef.current && detectorRef.current && !videoRef.current.paused && !videoRef.current.ended) {
@@ -326,16 +315,13 @@ export default function ComputerVisionPose() {
         processFrame();
       }
     } catch (err) {
-      console.error('Camera/MediaPipe initialization error:', err);
-      setDetectorStatus('WebCam Access Failed. Switching to AI Simulation Mode!');
+      console.error('Camera initialization error:', err);
+      setDetectorStatus('WebCam Unavailable -> AI Simulation Active');
       setIsCameraActive(false);
       startAISimulation();
     }
   };
 
-  // ==========================================
-  // AI MOTION SIMULATOR (DEMO MODE)
-  // ==========================================
   const startAISimulation = () => {
     stopTracking();
     setIsSimulating(true);
@@ -356,17 +342,13 @@ export default function ComputerVisionPose() {
       canvas.height = h;
       ctx.clearRect(0, 0, w, h);
 
-      // Trigonometric skeleton motion physics generator
       frameCount++;
       const speed = 0.05;
-      const progress = (Math.sin(frameCount * speed) + 1) / 2; // 0 to 1 smooth wave
-      
+      const progress = (Math.sin(frameCount * speed) + 1) / 2;
       const angleRange = config.upThreshold - config.downThreshold;
       const simulatedAngle = Math.round(config.downThreshold + (progress * angleRange));
       
-      // Build synthetic keypoint landmarks for skeleton visualization
       const syntheticLandmarks = createSyntheticPose(selectedExercise, simulatedAngle, w, h);
-
       processKeypointsAndDraw(syntheticLandmarks, ctx, w, h, simulatedAngle);
 
       animFrameIdRef.current = requestAnimationFrame(simLoop);
@@ -374,13 +356,9 @@ export default function ComputerVisionPose() {
     simLoop();
   };
 
-  // ==========================================
-  // SYNTHETIC KEYPOINT GENERATOR FOR SIMULATION
-  // ==========================================
   const createSyntheticPose = (exercise, angle, w, h) => {
-    // Generate normalized 0-1 coordinates for joints
     const cX = 0.5;
-    const normAngle = (angle - 30) / 150; // normalized height flex
+    const normAngle = (angle - 30) / 150;
     
     let nose = { x: cX, y: 0.18, visibility: 0.99 };
     let lShoulder = { x: cX - 0.12, y: 0.28, visibility: 0.99 };
@@ -397,7 +375,6 @@ export default function ComputerVisionPose() {
     let rAnkle = { x: cX + 0.11, y: 0.90, visibility: 0.99 };
 
     if (exercise === 'Pushups' || exercise === 'Plank') {
-      // Horizontal body orientation
       lShoulder = { x: 0.25, y: 0.55 + (1 - normAngle) * 0.1, visibility: 0.99 };
       rShoulder = { x: 0.25, y: 0.55 + (1 - normAngle) * 0.1, visibility: 0.99 };
       lElbow = { x: 0.20, y: 0.65, visibility: 0.99 };
@@ -429,11 +406,7 @@ export default function ComputerVisionPose() {
     return lmArray;
   };
 
-  // ==========================================
-  // CORE POSE PROCESSING & SKELETON RENDERER
-  // ==========================================
   const processKeypointsAndDraw = (landmarks, ctx, w, h, forcedAngle = null) => {
-    // Map MediaPipe Landmark Indices
     const MP_MAP = {
       nose: 0, left_shoulder: 11, right_shoulder: 12,
       left_elbow: 13, right_elbow: 14, left_wrist: 15, right_wrist: 16,
@@ -452,7 +425,6 @@ export default function ComputerVisionPose() {
 
       if (dPt && dPt.visibility > 0.35) return { x: dPt.x * w, y: dPt.y * h };
 
-      // Pick whichever side has higher visibility
       if (lPt && rPt) {
         if (lPt.visibility >= rPt.visibility && lPt.visibility > 0.35) {
           return { x: lPt.x * w, y: lPt.y * h };
@@ -465,17 +437,16 @@ export default function ComputerVisionPose() {
       return null;
     };
 
-    // Draw Skeleton Connections
     const connections = [
-      [11, 12], [11, 13], [13, 15], [12, 14], [14, 16], // Upper Body
-      [11, 23], [12, 24], [23, 24],                    // Torso
-      [23, 25], [25, 27], [24, 26], [26, 28]             // Legs
+      [11, 12], [11, 13], [13, 15], [12, 14], [14, 16],
+      [11, 23], [12, 24], [23, 24],
+      [23, 25], [25, 27], [24, 26], [26, 28]
     ];
 
     ctx.strokeStyle = '#06b6d4';
-    ctx.lineWidth = 4;
-    ctx.shadowColor = 'rgba(6, 182, 212, 0.6)';
-    ctx.shadowBlur = 10;
+    ctx.lineWidth = 3;
+    ctx.shadowColor = 'rgba(6, 182, 212, 0.5)';
+    ctx.shadowBlur = 8;
 
     connections.forEach(([i, j]) => {
       if (landmarks[i] && landmarks[j] && (landmarks[i].visibility > 0.3 || isSimulating)) {
@@ -486,20 +457,18 @@ export default function ComputerVisionPose() {
       }
     });
 
-    // Draw Joint Points
     landmarks.forEach((lm) => {
       if (lm && (lm.visibility > 0.35 || isSimulating)) {
         ctx.beginPath();
-        ctx.arc(lm.x * w, lm.y * h, 6, 0, 2 * Math.PI);
+        ctx.arc(lm.x * w, lm.y * h, 5, 0, 2 * Math.PI);
         ctx.fillStyle = '#10b981';
         ctx.shadowColor = '#10b981';
-        ctx.shadowBlur = 12;
+        ctx.shadowBlur = 10;
         ctx.fill();
       }
     });
-    ctx.shadowBlur = 0; // reset
+    ctx.shadowBlur = 0;
 
-    // Vector Calculations for Exercise Angle
     const config = EXERCISES_CONFIG[selectedExercise];
     const [j1Name, j2Name, j3Name] = config.targetAngleJoints;
 
@@ -507,7 +476,6 @@ export default function ComputerVisionPose() {
     const p2 = getBestPoint(j2Name);
     const p3 = getBestPoint(j3Name);
 
-    // Spine Angle for Posture Verification (Shoulder - Hip - Ankle)
     const sPt = getBestPoint('shoulder');
     const hPt = getBestPoint('hip');
     const aPt = getBestPoint('ankle');
@@ -526,15 +494,13 @@ export default function ComputerVisionPose() {
     if (angle > 0) {
       setCurrentAngle(angle);
 
-      // Render Angle Text on Canvas (Un-mirrored matrix reset)
       ctx.save();
       ctx.fillStyle = isPostureValid ? '#22d3ee' : '#f43f5e';
-      ctx.font = 'bold 22px Inter, sans-serif';
+      ctx.font = 'bold 18px Inter, sans-serif';
       const vertexPt = p2 || { x: w / 2, y: h / 2 };
-      ctx.fillText(`${angle}°`, vertexPt.x + 15, vertexPt.y);
+      ctx.fillText(`${angle}°`, vertexPt.x + 10, vertexPt.y);
       ctx.restore();
 
-      // State Machine Rep Logic
       if (selectedExercise === 'Plank') {
         if (isPostureValid) {
           setFeedback(config.goodFeedback);
@@ -563,7 +529,6 @@ export default function ComputerVisionPose() {
             setRepCount(prev => {
               const newCount = prev + 1;
               triggerSound('rep');
-              // Save completed set milestone
               if (newCount % 5 === 0) {
                 logWorkoutSession(selectedExercise, newCount);
               }
@@ -578,7 +543,6 @@ export default function ComputerVisionPose() {
     }
   };
 
-  // Stop tracking
   const stopTracking = () => {
     if (animFrameIdRef.current) {
       cancelAnimationFrame(animFrameIdRef.current);
@@ -591,13 +555,11 @@ export default function ComputerVisionPose() {
     setIsSimulating(false);
     setDetectorStatus('Stopped');
 
-    // Save final workout log if reps were done
     if (repCount > 0) {
       logWorkoutSession(selectedExercise, repCount);
     }
   };
 
-  // Save Workout Session Log
   const logWorkoutSession = (exName, count) => {
     const durationMin = sessionStartTime ? Math.max(1, Math.round((Date.now() - sessionStartTime) / 1000 / 60)) : 1;
     const calories = Math.round((count * EXERCISES_CONFIG[exName].caloriesPerRep) * 10) / 10;
@@ -612,59 +574,60 @@ export default function ComputerVisionPose() {
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
-    setWorkoutLog(prev => [newEntry, ...prev.slice(0, 4)]);
+    setWorkoutLog(prev => [newEntry, ...prev.slice(0, 3)]);
   };
 
   return (
-    <div className="animate-fade" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <div className="animate-fade" style={{ display: 'flex', flexDirection: 'column', gap: '14px', maxWidth: '1240px', margin: '0 auto' }}>
       
-      {/* Header Panel */}
-      <div className="glass-panel" style={{ padding: '24px', borderRadius: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+      {/* Header Panel - Compact */}
+      <div className="glass-panel" style={{ padding: '14px 18px', borderRadius: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <h2 style={{ fontSize: '1.4rem', fontWeight: 700 }}>Real-Time Exercise CV Rep & Posture AI</h2>
-            <span style={{ background: 'rgba(6, 182, 212, 0.15)', color: '#22d3ee', padding: '4px 10px', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 700, border: '1px solid rgba(6, 182, 212, 0.3)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <h2 style={{ fontSize: '1.2rem', fontWeight: 700 }}>Real-Time Exercise CV Rep & Posture AI</h2>
+            <span style={{ background: 'rgba(6, 182, 212, 0.15)', color: '#22d3ee', padding: '3px 8px', borderRadius: '16px', fontSize: '0.7rem', fontWeight: 700, border: '1px solid rgba(6, 182, 212, 0.3)' }}>
               10 Exercises Biomechanics
             </span>
           </div>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginTop: '4px' }}>
-            Vector joint geometry tracking, strict form posture validation, and real-time audio coaching feedback.
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '2px' }}>
+            Joint vector tracking, form alignment scoring & live coaching cues.
           </p>
         </div>
 
         {/* Action Controls */}
-        <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
           
           <button 
             className="btn-secondary" 
             onClick={() => setSoundEnabled(!soundEnabled)}
-            title={soundEnabled ? 'Mute Audio Cues' : 'Enable Audio Cues'}
-            style={{ padding: '10px 14px' }}
+            title={soundEnabled ? 'Mute Audio' : 'Enable Audio'}
+            style={{ padding: '8px 12px', fontSize: '0.8rem' }}
           >
-            {soundEnabled ? <Volume2 size={18} color="#10b981" /> : <VolumeX size={18} color="#f43f5e" />}
+            {soundEnabled ? <Volume2 size={16} color="#10b981" /> : <VolumeX size={16} color="#f43f5e" />}
           </button>
 
           <button 
-            className={isSimulating ? 'btn-secondary' : 'btn-secondary'} 
+            className="btn-secondary" 
             onClick={isSimulating ? stopTracking : startAISimulation}
-            style={{ borderColor: isSimulating ? '#22d3ee' : 'var(--border-color)', color: isSimulating ? '#22d3ee' : '#fff' }}
+            style={{ borderColor: isSimulating ? '#22d3ee' : 'var(--border-color)', color: isSimulating ? '#22d3ee' : '#fff', padding: '8px 14px', fontSize: '0.82rem' }}
           >
-            <Sparkles size={16} color="#22d3ee" />
+            <Sparkles size={15} color="#22d3ee" />
             {isSimulating ? 'Stop AI Demo' : 'AI Motion Simulator'}
           </button>
 
           <button 
             className={isCameraActive ? 'btn-secondary' : 'btn-primary'} 
             onClick={isCameraActive ? stopTracking : startRealTimeTracking}
+            style={{ padding: '8px 16px', fontSize: '0.82rem' }}
           >
-            {isCameraActive ? <Square size={16} color="#f43f5e" /> : <Play size={16} />}
-            {isCameraActive ? 'Stop Vision Tracking' : 'Start WebCam AI Vision'}
+            {isCameraActive ? <Square size={15} color="#f43f5e" /> : <Play size={15} />}
+            {isCameraActive ? 'Stop Camera' : 'Start WebCam AI'}
           </button>
         </div>
       </div>
 
-      {/* 10 Exercises Selector Bar */}
-      <div className="glass-panel" style={{ padding: '16px 20px', borderRadius: '18px', display: 'flex', gap: '10px', overflowX: 'auto', scrollbarWidth: 'thin' }}>
+      {/* 10 Exercises Selector Chips */}
+      <div className="glass-panel" style={{ padding: '10px 14px', borderRadius: '14px', display: 'flex', gap: '8px', overflowX: 'auto', scrollbarWidth: 'none' }}>
         {Object.keys(EXERCISES_CONFIG).map(exKey => {
           const isSelected = selectedExercise === exKey;
           const ex = EXERCISES_CONFIG[exKey];
@@ -673,23 +636,23 @@ export default function ComputerVisionPose() {
               key={exKey}
               onClick={() => handleExerciseChange(exKey)}
               style={{
-                padding: '10px 16px',
-                borderRadius: '14px',
+                padding: '6px 12px',
+                borderRadius: '10px',
                 border: isSelected ? '1px solid #06b6d4' : '1px solid var(--border-color)',
-                background: isSelected ? 'linear-gradient(135deg, rgba(6, 182, 212, 0.25) 0%, rgba(15, 23, 42, 0.9) 100%)' : 'var(--bg-input)',
+                background: isSelected ? 'linear-gradient(135deg, rgba(6, 182, 212, 0.25) 0%, rgba(15, 23, 42, 0.9) 100%)' : 'rgba(15, 23, 42, 0.4)',
                 color: isSelected ? '#fff' : 'var(--text-muted)',
                 fontWeight: isSelected ? 700 : 500,
                 cursor: 'pointer',
                 whiteSpace: 'nowrap',
-                fontSize: '0.85rem',
+                fontSize: '0.78rem',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '8px',
-                transition: 'all 0.2s ease'
+                gap: '6px',
+                transition: 'all 0.15s ease'
               }}
             >
               <span>{ex.label}</span>
-              <span style={{ fontSize: '0.68rem', padding: '2px 6px', borderRadius: '6px', background: isSelected ? '#06b6d4' : 'rgba(255,255,255,0.08)', color: '#fff' }}>
+              <span style={{ fontSize: '0.64rem', padding: '1px 5px', borderRadius: '4px', background: isSelected ? '#06b6d4' : 'rgba(255,255,255,0.08)', color: '#fff' }}>
                 {ex.category}
               </span>
             </button>
@@ -697,21 +660,21 @@ export default function ComputerVisionPose() {
         })}
       </div>
 
-      {/* Info Banner for Selected Exercise Biomechanics */}
-      <div className="glass-panel" style={{ padding: '14px 20px', borderRadius: '16px', background: 'rgba(6, 182, 212, 0.08)', border: '1px solid rgba(6, 182, 212, 0.25)', display: 'flex', alignItems: 'center', gap: '12px' }}>
-        <Info size={20} color="#22d3ee" style={{ flexShrink: 0 }} />
-        <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+      {/* Info Banner for Selected Exercise */}
+      <div className="glass-panel" style={{ padding: '10px 16px', borderRadius: '12px', background: 'rgba(6, 182, 212, 0.08)', border: '1px solid rgba(6, 182, 212, 0.2)', display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <Info size={17} color="#22d3ee" style={{ flexShrink: 0 }} />
+        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
           <strong style={{ color: '#22d3ee' }}>{currentExConfig.label} Algorithm: </strong>
           {currentExConfig.description} (Target: {currentExConfig.downThreshold}° to {currentExConfig.upThreshold}°)
         </div>
       </div>
 
-      {/* Main Vision Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: '20px' }}>
+      {/* Main Vision Grid - Balanced Dimensions */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 310px', gap: '14px' }}>
         
-        {/* Real-Time Video & Skeleton Overlay Canvas */}
+        {/* Real-Time Video & Canvas Overlay - Reduced Height (360px) */}
         <div className="glass-panel" style={{
-          borderRadius: '24px', position: 'relative', overflow: 'hidden', height: '480px', background: '#020617', display: 'flex', alignItems: 'center', justifyContent: 'center'
+          borderRadius: '18px', position: 'relative', overflow: 'hidden', height: '360px', background: '#020617', display: 'flex', alignItems: 'center', justifyContent: 'center'
         }}>
           {(isCameraActive || isSimulating) ? (
             <div style={{ width: '100%', height: '100%', position: 'relative' }}>
@@ -735,103 +698,103 @@ export default function ComputerVisionPose() {
               />
 
               {/* Status Badge */}
-              <div style={{ position: 'absolute', top: '16px', left: '16px', background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(10px)', padding: '6px 14px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', border: '1px solid rgba(6, 182, 212, 0.4)' }}>
-                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: isSimulating ? '#22d3ee' : '#10b981', boxShadow: isSimulating ? '0 0 10px #22d3ee' : '0 0 10px #10b981' }}></span>
+              <div style={{ position: 'absolute', top: '12px', left: '12px', background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)', padding: '4px 10px', borderRadius: '16px', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', border: '1px solid rgba(6, 182, 212, 0.4)' }}>
+                <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: isSimulating ? '#22d3ee' : '#10b981', boxShadow: isSimulating ? '0 0 8px #22d3ee' : '0 0 8px #10b981' }}></span>
                 {detectorStatus}
               </div>
 
               {/* Live Joint Angle Floating Meter */}
               {currentAngle > 0 && (
-                <div style={{ position: 'absolute', bottom: '16px', left: '16px', background: 'rgba(0,0,0,0.8)', padding: '8px 16px', borderRadius: '14px', fontSize: '0.88rem', color: '#22d3ee', fontWeight: 700, border: '1px solid rgba(6, 182, 212, 0.4)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Activity size={16} color="#22d3ee" />
-                  Live Joint Angle: <span style={{ fontSize: '1.1rem', color: '#fff' }}>{currentAngle}°</span>
+                <div style={{ position: 'absolute', bottom: '12px', left: '12px', background: 'rgba(0,0,0,0.8)', padding: '6px 12px', borderRadius: '10px', fontSize: '0.8rem', color: '#22d3ee', fontWeight: 700, border: '1px solid rgba(6, 182, 212, 0.3)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Activity size={14} color="#22d3ee" />
+                  Angle: <span style={{ fontSize: '1rem', color: '#fff' }}>{currentAngle}°</span>
                 </div>
               )}
             </div>
 
           ) : (
-            <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '40px' }}>
-              <Camera size={64} color="var(--primary)" style={{ opacity: 0.5, marginBottom: '16px' }} />
-              <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#fff', marginBottom: '6px' }}>
+            <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '24px' }}>
+              <Camera size={48} color="var(--primary)" style={{ opacity: 0.5, marginBottom: '12px' }} />
+              <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#fff', marginBottom: '4px' }}>
                 WebCam & AI Motion Detection Ready
               </h3>
-              <p style={{ fontSize: '0.88rem', maxWidth: '400px', margin: '0 auto 20px' }}>
+              <p style={{ fontSize: '0.8rem', maxWidth: '360px', margin: '0 auto 16px', color: 'var(--text-muted)' }}>
                 Select an exercise from above and start WebCam AI Vision or test with AI Motion Simulator.
               </p>
 
-              <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
-                <button className="btn-primary" onClick={startRealTimeTracking}>
-                  <Play size={16} /> Activate Camera Vision
+              <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+                <button className="btn-primary" onClick={startRealTimeTracking} style={{ padding: '8px 16px', fontSize: '0.82rem' }}>
+                  <Play size={14} /> Activate Camera
                 </button>
-                <button className="btn-secondary" onClick={startAISimulation}>
-                  <Sparkles size={16} color="#22d3ee" /> Test AI Simulator
+                <button className="btn-secondary" onClick={startAISimulation} style={{ padding: '8px 14px', fontSize: '0.82rem' }}>
+                  <Sparkles size={14} color="#22d3ee" /> Test AI Simulator
                 </button>
               </div>
             </div>
           )}
         </div>
 
-        {/* Right Dashboard Column */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {/* Right Dashboard Column - Compact Layout */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           
           {/* Rep / Plank Counter Card */}
-          <div className="glass-panel" style={{ padding: '24px', borderRadius: '20px', textAlign: 'center', background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(15, 23, 42, 0.95) 100%)', border: '1px solid rgba(6, 182, 212, 0.3)' }}>
-            <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 700 }}>
+          <div className="glass-panel" style={{ padding: '16px', borderRadius: '16px', textAlign: 'center', background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.12) 0%, rgba(15, 23, 42, 0.9) 100%)', border: '1px solid rgba(6, 182, 212, 0.25)' }}>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.8px', fontWeight: 700 }}>
               {selectedExercise === 'Plank' ? 'Plank Hold Time' : `${currentExConfig.label} Reps`}
             </div>
             
-            <div style={{ fontSize: '4.5rem', fontWeight: 900, fontFamily: 'var(--font-display)', color: '#fff', margin: '4px 0', lineHeight: 1 }}>
+            <div style={{ fontSize: '3.2rem', fontWeight: 900, fontFamily: 'var(--font-display)', color: '#fff', margin: '2px 0', lineHeight: 1 }}>
               {selectedExercise === 'Plank' ? `${plankHoldSeconds}s` : repCount}
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '12px' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '6px', marginTop: '8px' }}>
               <button 
                 className="btn-secondary" 
-                style={{ padding: '6px 14px', fontSize: '0.78rem' }} 
+                style={{ padding: '4px 10px', fontSize: '0.72rem' }} 
                 onClick={() => { setRepCount(0); setPlankHoldSeconds(0); repStageRef.current = 'up'; }}
               >
-                <RefreshCw size={14} /> Reset Counter
+                <RefreshCw size={12} /> Reset
               </button>
             </div>
           </div>
 
           {/* Form Alignment Score Meter */}
-          <div className="glass-panel" style={{ padding: '20px', borderRadius: '20px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Posture Alignment Score</span>
-              <span style={{ fontSize: '1.1rem', fontWeight: 800, color: postureScore > 80 ? '#10b981' : '#f43f5e' }}>
+          <div className="glass-panel" style={{ padding: '14px', borderRadius: '16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+              <span style={{ fontSize: '0.8rem', fontWeight: 600 }}>Posture Alignment Score</span>
+              <span style={{ fontSize: '0.98rem', fontWeight: 800, color: postureScore > 80 ? '#10b981' : '#f43f5e' }}>
                 {postureScore}%
               </span>
             </div>
-            <div style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px', overflow: 'hidden' }}>
+            <div style={{ width: '100%', height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
               <div style={{ width: `${postureScore}%`, height: '100%', background: postureScore > 80 ? 'linear-gradient(90deg, #06b6d4, #10b981)' : 'linear-gradient(90deg, #f59e0b, #f43f5e)', transition: 'all 0.3s ease' }}></div>
             </div>
           </div>
 
           {/* Real-time AI Coach Feedback Card */}
           <div className="glass-panel" style={{
-            padding: '20px', borderRadius: '20px',
+            padding: '14px', borderRadius: '16px',
             background: feedbackType === 'warn' ? 'rgba(244, 63, 94, 0.12)' : 'rgba(16, 185, 129, 0.12)',
-            border: feedbackType === 'warn' ? '1px solid rgba(244, 63, 94, 0.35)' : '1px solid rgba(16, 185, 129, 0.35)'
+            border: feedbackType === 'warn' ? '1px solid rgba(244, 63, 94, 0.3)' : '1px solid rgba(16, 185, 129, 0.3)'
           }}>
-            <div style={{ fontSize: '0.8rem', fontWeight: 700, color: feedbackType === 'warn' ? '#f43f5e' : '#10b981', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              {feedbackType === 'warn' ? <AlertCircle size={16} /> : <CheckCircle size={16} />} Real-Time Form Coach
+            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: feedbackType === 'warn' ? '#f43f5e' : '#10b981', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+              {feedbackType === 'warn' ? <AlertCircle size={14} /> : <CheckCircle size={14} />} Form Coach
             </div>
-            <div style={{ fontSize: '0.9rem', color: '#fff', fontWeight: 600, lineHeight: '1.4' }}>
+            <div style={{ fontSize: '0.82rem', color: '#fff', fontWeight: 600, lineHeight: '1.3' }}>
               "{feedback}"
             </div>
           </div>
 
           {/* Workout Log Session Preview */}
           {workoutLog.length > 0 && (
-            <div className="glass-panel" style={{ padding: '16px 20px', borderRadius: '20px' }}>
-              <div style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <History size={15} color="#22d3ee" /> Session Rep Log History
+            <div className="glass-panel" style={{ padding: '12px 14px', borderRadius: '16px' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <History size={13} color="#22d3ee" /> Session Log
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 {workoutLog.map(item => (
-                  <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem', padding: '6px 10px', background: 'rgba(255,255,255,0.04)', borderRadius: '8px' }}>
-                    <span style={{ fontWeight: 600 }}>{item.exercise} ({item.reps} reps)</span>
+                  <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem', padding: '4px 8px', background: 'rgba(255,255,255,0.04)', borderRadius: '6px' }}>
+                    <span style={{ fontWeight: 600 }}>{item.exercise} ({item.reps})</span>
                     <span style={{ color: '#10b981', fontWeight: 700 }}>~{item.calories} kcal</span>
                   </div>
                 ))}
